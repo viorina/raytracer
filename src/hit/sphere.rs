@@ -4,7 +4,7 @@ use derive_more::Constructor;
 
 use crate::{
     hit::{Hit, HitRecord},
-    Ray, Scatter, Vec3,
+    Interval, Ray, Scatter, Vec3,
 };
 
 #[derive(Constructor)]
@@ -15,7 +15,7 @@ pub struct Sphere {
 }
 
 impl Hit for Sphere {
-    fn hit(&self, ray: Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
+    fn hit(&self, ray: Ray, t: Interval) -> Option<HitRecord> {
         let oc = ray.origin() - self.center;
         let a = ray.direction().squared_length();
         let b = oc.dot(ray.direction());
@@ -30,9 +30,8 @@ impl Hit for Sphere {
             (-b - discriminant.sqrt()) / a,
             (-b + discriminant.sqrt()) / a,
         );
-        let in_bounds = |t: f32| t_min < t && t < t_max;
 
-        let t = match (in_bounds(roots.0), in_bounds(roots.1)) {
+        let t = match (t.surrounds(roots.0), t.surrounds(roots.1)) {
             (true, _) => roots.0,
             (false, true) => roots.1,
             (false, false) => return None,

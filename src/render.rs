@@ -1,10 +1,8 @@
-use std::f32;
-
 use rand::Rng;
 
 use crate::{
     hit::{Hit, HitList},
-    Color, Image, Ray, Scene, Vec3,
+    Color, Image, Interval, Ray, Scene, Vec3,
 };
 
 pub fn render(img: &mut Image, scene: Scene) {
@@ -35,7 +33,7 @@ pub fn render(img: &mut Image, scene: Scene) {
 }
 
 fn trace(ray: Ray, world: &HitList, depth: i32) -> Vec3 {
-    match world.hit(ray, 0.001, f32::MAX) {
+    match world.hit(ray, Interval::new(0.001, f32::MAX)) {
         Some(record) => {
             if depth >= 50 {
                 return Vec3::default();
