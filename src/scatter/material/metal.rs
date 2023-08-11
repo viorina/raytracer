@@ -5,8 +5,6 @@ use crate::{
     Ray,
 };
 
-use super::utils;
-
 #[derive(Debug)]
 pub struct Metal {
     albedo: Vec3,
@@ -25,7 +23,7 @@ impl Metal {
 impl Scatter for Metal {
     fn scatter(&self, ray: Ray, hit: HitRecord) -> Option<ScatteredRay> {
         let reflected = ray.direction().unit().reflect(hit.normal());
-        let direction = reflected + utils::random_in_unit_sphere() * self.fuzz;
+        let direction = reflected + Vec3::random_in_unit_sphere() * self.fuzz;
         let scattered = Ray::new(hit.point(), direction);
 
         if !hit.contains(scattered) {

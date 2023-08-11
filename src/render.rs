@@ -8,6 +8,7 @@ use crate::{
 
 pub fn render(img: &mut Image, scene: Scene) {
     let n_samples = 100;
+    let max_depth = 50;
 
     let width = img.width();
     let height = img.height();
@@ -22,7 +23,7 @@ pub fn render(img: &mut Image, scene: Scene) {
 
             let ray = scene.camera().get_ray(u, v);
 
-            intensity += trace(ray, scene.world(), 0);
+            intensity += trace(ray, scene.world(), 0, max_depth);
         }
 
         intensity /= n_samples as f32;
@@ -33,16 +34,16 @@ pub fn render(img: &mut Image, scene: Scene) {
     img.fill(pixel_color);
 }
 
-fn trace(ray: Ray, world: &HitList, depth: i32) -> Vec3 {
+fn trace(ray: Ray, world: &HitList, depth: i32, max_depth: i32) -> Vec3 {
     match world.hit(ray, Interval::new(0.001, f32::MAX)) {
         Some(record) => {
-            if depth >= 50 {
+            if depth >= max_depth {
                 return Vec3::default();
             }
 
             match record.material().scatter(ray, record) {
                 Some(scattered) => {
-                    trace(scattered.ray(), world, depth + 1) * scattered.attenuation()
+                    trace(scattered.ray(), world, depth + 1, max_depth) * scattered.attenuation()
                 }
                 None => Vec3::default(),
             }

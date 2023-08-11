@@ -23,12 +23,7 @@ pub struct Scene {
 
 impl Default for Scene {
     fn default() -> Self {
-        let camera = Camera::new(
-            Vec3::new(0.0, 0.0, 0.0),
-            Vec3::new(-2.0, 1.0, -1.0),
-            Vec3::new(4.0, 0.0, 0.0),
-            Vec3::new(0.0, -2.0, 0.0),
-        );
+        let camera = Camera::default();
 
         let side_material: Arc<dyn Scatter> = Arc::new(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.1));
         let right_sphere = Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, side_material.clone());

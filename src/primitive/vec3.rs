@@ -2,6 +2,7 @@ use std::ops;
 
 use derive_more::Constructor;
 use getset::CopyGetters;
+use rand_distr::{Distribution, UnitSphere};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, PartialOrd, Constructor, CopyGetters)]
 #[getset(get_copy = "pub")]
@@ -14,6 +15,10 @@ pub struct Vec3 {
 impl Vec3 {
     pub fn ones() -> Vec3 {
         Vec3::new(1.0, 1.0, 1.0)
+    }
+
+    pub fn random_in_unit_sphere() -> Vec3 {
+        UnitSphere.sample(&mut rand::thread_rng()).into()
     }
 
     pub fn dot(self, rhs: Vec3) -> f32 {

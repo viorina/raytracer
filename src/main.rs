@@ -8,7 +8,7 @@ fn main() {
     let result = match parse_args() {
         Destination::File(path) => match fs::File::create(path) {
             Ok(mut file) => {
-                let mut img = Image::new(200, 100);
+                let mut img = Image::new(160, 90);
                 render::render(&mut img, Scene::default());
 
                 write::ppm(&mut file, img)
@@ -16,7 +16,7 @@ fn main() {
             Err(error) => Err(error),
         },
         Destination::Stdout => {
-            let mut img = Image::new(200, 100);
+            let mut img = Image::new(160, 90);
             render::render(&mut img, Scene::default());
 
             let stdout = io::stdout();

@@ -15,7 +15,7 @@ pub trait Hit: Send + Sync {
     fn hit(&self, ray: Ray, t: Interval) -> Option<HitRecord>;
 }
 
-#[derive(Clone, Copy, Constructor, CopyGetters)]
+#[derive(Constructor, CopyGetters)]
 #[getset(get_copy = "pub")]
 pub struct HitRecord<'a> {
     t: f32,
