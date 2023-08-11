@@ -4,7 +4,9 @@ use derive_more::Constructor;
 
 use crate::{
     hit::{Hit, HitRecord},
-    Interval, Ray, Scatter, Vec3,
+    primitive::{Interval, Vec3},
+    scatter::Scatter,
+    Ray,
 };
 
 #[derive(Constructor)]

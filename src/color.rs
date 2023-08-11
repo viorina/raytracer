@@ -1,7 +1,7 @@
 use derive_more::Constructor;
 use getset::CopyGetters;
 
-use crate::Vec3;
+use crate::primitive::Vec3;
 
 #[derive(Debug, Default, Clone, Copy, Constructor, CopyGetters)]
 #[getset(get_copy = "pub")]

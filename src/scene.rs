@@ -5,8 +5,12 @@ use getset::{CopyGetters, Getters};
 
 use crate::{
     hit::{HitList, Sphere},
-    scatter::{Lambertian, Metal, Scatter},
-    Camera, Vec3,
+    primitive::Vec3,
+    scatter::{
+        material::{Dielectric, Lambertian, Metal},
+        Scatter,
+    },
+    Camera,
 };
 
 #[derive(Constructor, CopyGetters, Getters)]
@@ -27,11 +31,10 @@ impl Default for Scene {
         );
 
         let side_material: Arc<dyn Scatter> = Arc::new(Metal::new(Vec3::new(0.8, 0.8, 0.8), 0.1));
-        let right_sphere = Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, Arc::clone(&side_material));
-        let left_sphere = Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, Arc::clone(&side_material));
+        let right_sphere = Sphere::new(Vec3::new(1.0, 0.0, -1.0), 0.5, side_material.clone());
+        let left_sphere = Sphere::new(Vec3::new(-1.0, 0.0, -1.0), 0.5, side_material.clone());
 
-        let central_material: Arc<dyn Scatter> =
-            Arc::new(Lambertian::new(Vec3::new(0.0, 0.2, 0.6)));
+        let central_material: Arc<dyn Scatter> = Arc::new(Dielectric::new(1.5));
         let central_sphere = Sphere::new(Vec3::new(0.0, 0.0, -1.0), 0.5, central_material);
 
         let ground_material: Arc<dyn Scatter> = Arc::new(Lambertian::new(Vec3::new(0.3, 0.3, 0.3)));

@@ -3,7 +3,11 @@ mod sphere;
 use derive_more::Constructor;
 use getset::CopyGetters;
 
-use crate::{Interval, Ray, Scatter, Vec3};
+use crate::{
+    primitive::{Interval, Vec3},
+    scatter::Scatter,
+    Ray,
+};
 
 pub use sphere::Sphere;
 
@@ -23,6 +27,12 @@ pub struct HitRecord<'a> {
 #[derive(Default)]
 pub struct HitList {
     objects: Vec<Box<dyn Hit>>,
+}
+
+impl<'a> HitRecord<'a> {
+    pub fn contains(&self, ray: Ray) -> bool {
+        ray.direction().dot(self.normal()) > 0.0
+    }
 }
 
 impl HitList {

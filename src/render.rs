@@ -2,7 +2,8 @@ use rand::Rng;
 
 use crate::{
     hit::{Hit, HitList},
-    Color, Image, Interval, Ray, Scene, Vec3,
+    primitive::{Interval, Vec3},
+    Color, Image, Ray, Scene,
 };
 
 pub fn render(img: &mut Image, scene: Scene) {

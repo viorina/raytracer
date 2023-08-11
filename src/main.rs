@@ -1,3 +1,5 @@
+mod write;
+
 use std::{fs, io, path};
 
 use raytracer::{render, Image, Scene};
@@ -9,7 +11,7 @@ fn main() {
                 let mut img = Image::new(200, 100);
                 render::render(&mut img, Scene::default());
 
-                img.write_ppm(&mut file)
+                write::ppm(&mut file, img)
             }
             Err(error) => Err(error),
         },
@@ -20,7 +22,7 @@ fn main() {
             let stdout = io::stdout();
             let mut stdoutlock = stdout.lock();
 
-            img.write_ppm(&mut stdoutlock)
+            write::ppm(&mut stdoutlock, img)
         }
     };
 

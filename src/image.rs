@@ -1,16 +1,17 @@
-use std::{io, ops};
+use std::ops;
 
-use getset::CopyGetters;
+use getset::{CopyGetters, Getters};
 use rayon::prelude::*;
 
 use crate::Color;
 
-#[derive(Debug, CopyGetters)]
+#[derive(Debug, CopyGetters, Getters)]
 pub struct Image {
     #[getset(get_copy = "pub")]
     width: usize,
     #[getset(get_copy = "pub")]
     height: usize,
+    #[getset(get = "pub")]
     data: Vec<Color>,
 }
 
@@ -27,16 +28,6 @@ impl Image {
 
     pub fn new(width: usize, height: usize) -> Image {
         Image::with_background(width, height, Color::default())
-    }
-
-    pub fn write_ppm<T: io::Write>(&self, w: &mut T) -> io::Result<()> {
-        writeln!(w, "P3\n{} {}\n255", self.width, self.height)?;
-
-        for pixel in &self.data {
-            writeln!(w, "{} {} {}", pixel.r(), pixel.g(), pixel.b())?;
-        }
-
-        Ok(())
     }
 
     pub fn fill(&mut self, color: impl Fn(usize, usize) -> Color + Sync) {

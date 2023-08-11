@@ -1,6 +1,6 @@
 use derive_more::Constructor;
 
-use crate::{Ray, Vec3};
+use crate::{primitive::Vec3, Ray};
 
 #[derive(Debug, Clone, Copy, Constructor)]
 pub struct Camera {
