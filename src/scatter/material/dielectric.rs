@@ -15,7 +15,7 @@ pub struct Dielectric {
 
 impl Scatter for Dielectric {
     fn scatter(&self, ray: Ray, hit: HitRecord) -> Option<ScatteredRay> {
-        let (normal, refraction_ratio) = if hit.contains(ray) {
+        let (normal, refraction_ratio) = if ray.direction().dot(hit.normal()) > 0.0 {
             (-hit.normal(), self.refraction_index / 1.0)
         } else {
             (hit.normal(), 1.0 / self.refraction_index)

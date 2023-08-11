@@ -29,12 +29,6 @@ pub struct HitList {
     objects: Vec<Box<dyn Hit>>,
 }
 
-impl<'a> HitRecord<'a> {
-    pub fn contains(&self, ray: Ray) -> bool {
-        ray.direction().dot(self.normal()) > 0.0
-    }
-}
-
 impl HitList {
     pub fn push(&mut self, object: Box<dyn Hit>) {
         self.objects.push(object)

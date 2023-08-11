@@ -24,12 +24,12 @@ impl Scatter for Metal {
     fn scatter(&self, ray: Ray, hit: HitRecord) -> Option<ScatteredRay> {
         let reflected = ray.direction().unit().reflect(hit.normal());
         let direction = reflected + Vec3::random_in_unit_sphere() * self.fuzz;
-        let scattered = Ray::new(hit.point(), direction);
 
-        if !hit.contains(scattered) {
+        if direction.dot(hit.normal()) <= 0.0 {
             return None;
         }
 
+        let scattered = Ray::new(hit.point(), direction);
         Some(ScatteredRay::new(scattered, self.albedo))
     }
 }

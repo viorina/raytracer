@@ -2,6 +2,7 @@ use std::ops;
 
 use derive_more::Constructor;
 use getset::CopyGetters;
+use rand::Rng;
 use rand_distr::{Distribution, UnitSphere};
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, PartialOrd, Constructor, CopyGetters)]
@@ -21,16 +22,21 @@ impl Vec3 {
         UnitSphere.sample(&mut rand::thread_rng()).into()
     }
 
+    pub fn random_in_unit_disk() -> Vec3 {
+        let mut rng = rand::thread_rng();
+        Vec3::new(rng.gen_range(-1.0..1.0), rng.gen_range(-1.0..1.0), 0.0)
+    }
+
     pub fn dot(self, rhs: Vec3) -> f32 {
         self.x * rhs.x + self.y * rhs.y + self.z * rhs.z
     }
 
-    pub fn squared_length(self) -> f32 {
+    pub fn length_squared(self) -> f32 {
         self.dot(self)
     }
 
     pub fn length(self) -> f32 {
-        self.squared_length().sqrt()
+        self.length_squared().sqrt()
     }
 
     pub fn cross(self, rhs: Vec3) -> Vec3 {
@@ -57,7 +63,7 @@ impl Vec3 {
         let cos_theta = (-self).dot(normal).min(1.0);
 
         let vec_perpendicular = eta * (self + cos_theta * normal);
-        let vec_parallel = -(1.0 - vec_perpendicular.squared_length()).abs().sqrt() * normal;
+        let vec_parallel = -(1.0 - vec_perpendicular.length_squared()).abs().sqrt() * normal;
 
         vec_perpendicular + vec_parallel
     }

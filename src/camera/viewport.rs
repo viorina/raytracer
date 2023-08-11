@@ -1,25 +1,39 @@
-use crate::primitive::{Basis, Rectangle, Vec3};
+use getset::CopyGetters;
 
-#[derive(Debug)]
-pub struct ViewPort(Rectangle);
+use crate::primitive::Vec3;
 
-impl ViewPort {
-    pub fn new(field_of_view_angle: f32, focus_distance: f32, aspect_ratio: f32) -> ViewPort {
+use super::Frame;
+
+#[derive(Debug, Clone, Copy, CopyGetters)]
+#[getset(get_copy = "pub")]
+pub struct Viewport {
+    upper_left_corner: Vec3,
+    frame: Frame,
+}
+
+impl Viewport {
+    pub fn new(
+        point_of_view: Vec3,
+        camera_frame: Frame,
+        field_of_view_angle: f32,
+        focus_distance: f32,
+        aspect_ratio: f32,
+    ) -> Viewport {
         let height = 2.0 * (field_of_view_angle.to_radians() / 2.0).tan() * focus_distance;
         let width = height * aspect_ratio;
 
-        ViewPort(Rectangle::new(width, height))
-    }
+        let frame = Frame::new(
+            width * camera_frame.u(),
+            height * (-camera_frame.v()),
+            Vec3::default(),
+        );
 
-    pub fn height(&self) -> f32 {
-        self.0.height()
-    }
+        let upper_left_corner =
+            point_of_view - camera_frame.w() * focus_distance - frame.u() / 2.0 - frame.v() / 2.0;
 
-    pub fn width(&self) -> f32 {
-        self.0.width()
-    }
-
-    pub fn frame(&self, u: Vec3, v: Vec3) -> Basis {
-        Basis::new(self.width() * u, self.height() * (-v), Vec3::default())
+        Viewport {
+            upper_left_corner,
+            frame,
+        }
     }
 }

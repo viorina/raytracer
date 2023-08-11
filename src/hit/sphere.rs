@@ -19,9 +19,9 @@ pub struct Sphere {
 impl Hit for Sphere {
     fn hit(&self, ray: Ray, t: Interval) -> Option<HitRecord> {
         let oc = ray.origin() - self.center;
-        let a = ray.direction().squared_length();
+        let a = ray.direction().length_squared();
         let b = oc.dot(ray.direction());
-        let c = oc.squared_length() - self.radius.powi(2);
+        let c = oc.length_squared() - self.radius.powi(2);
         let discriminant = b * b - a * c;
 
         if discriminant <= 0.0 {

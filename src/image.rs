@@ -61,3 +61,9 @@ impl ops::IndexMut<usize> for Image {
         &mut self.data[start..start + self.width]
     }
 }
+
+impl Default for Image {
+    fn default() -> Self {
+        Image::new(200, 130)
+    }
+}
