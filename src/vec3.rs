@@ -1,6 +1,10 @@
 use std::ops;
 
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Default)]
+use derive_more::Constructor;
+use getset::CopyGetters;
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, PartialOrd, Constructor, CopyGetters)]
+#[getset(get_copy = "pub")]
 pub struct Vec3 {
     x: f32,
     y: f32,
@@ -8,24 +12,8 @@ pub struct Vec3 {
 }
 
 impl Vec3 {
-    pub fn new(x: f32, y: f32, z: f32) -> Vec3 {
-        Vec3 { x, y, z }
-    }
-
     pub fn ones() -> Vec3 {
         Vec3::new(1.0, 1.0, 1.0)
-    }
-
-    pub fn x(&self) -> f32 {
-        self.x
-    }
-
-    pub fn y(&self) -> f32 {
-        self.y
-    }
-
-    pub fn z(&self) -> f32 {
-        self.z
     }
 
     pub fn dot(self, rhs: Vec3) -> f32 {
@@ -36,7 +24,7 @@ impl Vec3 {
         self.dot(self)
     }
 
-    pub fn length(self) -> f32 {
+    pub fn length(&self) -> f32 {
         self.squared_length().sqrt()
     }
 
@@ -136,6 +124,12 @@ impl ops::Div<f32> for Vec3 {
 impl ops::DivAssign<f32> for Vec3 {
     fn div_assign(&mut self, rhs: f32) {
         *self = *self / rhs;
+    }
+}
+
+impl From<[f32; 3]> for Vec3 {
+    fn from(v: [f32; 3]) -> Self {
+        Vec3::new(v[0], v[1], v[2])
     }
 }
 

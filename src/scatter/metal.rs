@@ -1,9 +1,12 @@
-use crate::hit::HitRecord;
-use crate::ray::Ray;
-use crate::vec3::Vec3;
+use crate::{
+    hit::HitRecord,
+    scatter::{Scatter, ScatteredRay},
+    Ray, Vec3,
+};
 
-use super::{utils, Scatter, ScatteredRay};
+use super::utils;
 
+#[derive(Debug)]
 pub struct Metal {
     albedo: Vec3,
     fuzz: f32,
@@ -19,12 +22,12 @@ impl Metal {
 }
 
 impl Scatter for Metal {
-    fn scatter(&self, ray: &Ray, hit: &HitRecord) -> Option<ScatteredRay> {
+    fn scatter(&self, ray: Ray, hit: HitRecord) -> Option<ScatteredRay> {
         let reflected = ray.direction().unit().reflect(hit.normal());
         let direction = reflected + utils::random_in_unit_sphere() * self.fuzz;
 
         if direction.dot(hit.normal()) > 0.0 {
-            let scattered = Ray::new(hit.p(), direction);
+            let scattered = Ray::new(hit.point(), direction);
             Some(ScatteredRay::new(scattered, self.albedo))
         } else {
             None

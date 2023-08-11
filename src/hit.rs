@@ -1,47 +1,23 @@
-use crate::ray::Ray;
-use crate::scatter::Scatter;
-use crate::vec3::Vec3;
-
 mod sphere;
 
-pub use self::sphere::Sphere;
+use derive_more::Constructor;
+use getset::CopyGetters;
+
+use crate::{Ray, Scatter, Vec3};
+
+pub use sphere::Sphere;
 
 pub trait Hit: Send + Sync {
-    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
+    fn hit(&self, ray: Ray, t_min: f32, t_max: f32) -> Option<HitRecord>;
 }
 
+#[derive(Clone, Copy, Constructor, CopyGetters)]
+#[getset(get_copy = "pub")]
 pub struct HitRecord<'a> {
     t: f32,
     point: Vec3,
     normal: Vec3,
     material: &'a dyn Scatter,
-}
-
-impl<'a> HitRecord<'a> {
-    pub fn new(t: f32, point: Vec3, normal: Vec3, material: &dyn Scatter) -> HitRecord {
-        HitRecord {
-            t,
-            point,
-            normal,
-            material,
-        }
-    }
-
-    pub fn t(&self) -> f32 {
-        self.t
-    }
-
-    pub fn p(&self) -> Vec3 {
-        self.point
-    }
-
-    pub fn normal(&self) -> Vec3 {
-        self.normal
-    }
-
-    pub fn material(&self) -> &dyn Scatter {
-        self.material
-    }
 }
 
 #[derive(Default)]
@@ -56,7 +32,7 @@ impl HitList {
 }
 
 impl Hit for HitList {
-    fn hit(&self, ray: &Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
+    fn hit(&self, ray: Ray, t_min: f32, t_max: f32) -> Option<HitRecord> {
         let mut closest_t = t_max;
         let mut closest_record = None;
 
@@ -66,6 +42,7 @@ impl Hit for HitList {
                 closest_record = Some(record);
             }
         }
+
         closest_record
     }
 }

@@ -1,27 +1,20 @@
 use std::sync::Arc;
 
-use crate::camera::Camera;
-use crate::hit::{HitList, Sphere};
-use crate::scatter::{Lambertian, Metal, Scatter};
-use crate::vec3::Vec3;
+use derive_more::Constructor;
+use getset::{CopyGetters, Getters};
 
+use crate::{
+    hit::{HitList, Sphere},
+    scatter::{Lambertian, Metal, Scatter},
+    Camera, Vec3,
+};
+
+#[derive(Constructor, CopyGetters, Getters)]
 pub struct Scene {
+    #[getset(get_copy = "pub")]
     camera: Camera,
+    #[getset(get = "pub")]
     world: HitList,
-}
-
-impl Scene {
-    pub fn new(camera: Camera, world: HitList) -> Scene {
-        Scene { camera, world }
-    }
-
-    pub fn camera(&self) -> &Camera {
-        &self.camera
-    }
-
-    pub fn world(&self) -> &HitList {
-        &self.world
-    }
 }
 
 impl Default for Scene {
